@@ -3,7 +3,6 @@
 namespace Evaneos\Archi\Services;
 
 use Doctrine\Common\Proxy\Exception\UnexpectedValueException;
-use Doctrine\DBAL\Driver\Connection;
 use Evaneos\Archi\DataAccess\PokemonDataAccess;
 use Evaneos\Archi\ValueObjects\Pokemon;
 use InvalidArgumentException;
@@ -30,7 +29,7 @@ class PokemonService
     }
 
     /**
-     * @return array
+     * @return Pokemon[]
      */
     public function getAll()
     {
@@ -66,13 +65,18 @@ class PokemonService
         return $this->getPokemonByUuid($pokemon->getUuid());
     }
 
+    /**
+     * @param Pokemon $pokemon
+     *
+     * @return Pokemon
+     */
     public function evolvePokemon(Pokemon $pokemon)
     {
         if ($pokemon->getLevel() < 7) {
             throw new InvalidArgumentException('Oh maaaan ! This pokemon is too young to evolve :(');
         }
         if ($pokemon->getLevel() > 30) {
-            throw new InvalidArgumentException('Pokemon\'s level could not exceed level 30');
+            throw new InvalidArgumentException('Oh maaaan ! This pokemon is too old to evolve :(');
         }
 
         switch (true) {
@@ -87,6 +91,9 @@ class PokemonService
                 break;
             case $pokemon->getType() === "carabaffe" && $pokemon->getLevel() >= 15;
                 $this->evolve($pokemon, 'tortank');
+                break;
+            case $pokemon->getType() === "pikachu" && $pokemon->getLevel() >= 7:
+                $this->evolve($pokemon, 'raichu');
                 break;
             default:
                 throw new UnexpectedValueException(
@@ -112,7 +119,7 @@ class PokemonService
 
     /**
      * @param Pokemon $pokemon
-     * @param $newType
+     * @param string $newType
      */
     private function evolve(Pokemon $pokemon, $newType)
     {

@@ -62,7 +62,7 @@ class PokemonDataAccess
 
     /**
      * @param string $uuid
-     * @param type $type
+     * @param string $type
      */
     public function updateType($uuid, $type) {
         $sql = 'UPDATE pokemon.collection SET type = :type WHERE uuid = :uuid';

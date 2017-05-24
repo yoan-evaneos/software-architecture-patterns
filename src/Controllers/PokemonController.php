@@ -90,6 +90,8 @@ class PokemonController
     {
         $pokemon = $this->pokemonService->getPokemonByUuid($uuid);
 
+        $pokemon = $this->pokemonService->evolvePokemon($pokemon);
+
         return new JsonResponse($pokemon);
     }
 
